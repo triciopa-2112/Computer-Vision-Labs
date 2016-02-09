@@ -1,0 +1,172 @@
+sobel_h= [-1 -2 -1; 0 0 0; 1 2 1];
+sobel_v= [-1 -2 -1; 0 0 0; 1 2 1];
+filter_h= conv2(double(I), sobel_h, 'same');
+filter_v= conv2(double(I), sobel_v, 'same');
+imshow(filter_h);
+imshow(filter_v);
+sobel_v= [-1 0 1; -2 0 2; -1 0 1];
+filter_v= conv2(double(I), sobel_v, 'same');
+imshow(sobel_v);
+imshow(filter_v);
+filter_v
+combined = filter_v.^2 + filter_h.^2;
+imshow(combined);
+combined = sqrt(filter_v.^2 + filter_h.^2);
+imshow(combined);
+combined = filter_v.^2 + filter_h.^2;
+imshow(uint8(combined));
+imshow(uint8(sqrt(combined)));
+
+
+% ------ tresholding ---------
+t= graythresh(combined);
+t
+tresholded = im2bw(combined,t);
+imshow(tresholded);
+imshow(combined);
+E = uint8(sqrt(combined));
+imshow(E)
+t = graythresh(E);
+t
+tresholded= im2bw(E,t);
+imshow(tresholded);
+tresholded2= im2bw(E,.200);
+imshow(tresholded2);
+Et = uint8((E>t));
+imshow(Et);
+imshow(Et*255);
+tresholded3=im2bw(E,.800);
+imshow(tresholded3);
+
+% --------- Canny edge detections -----
+tl= 0.04;
+th=0.1;
+sigma=1.0;
+E = edge(I,'canny',[tl th],sigma);
+imshow(E);
+sigma = 2.5;
+E = edge(I,'canny',[tl th],sigma);
+imshow(E);
+sigma = 5.0;
+E = edge(I,'canny',[tl th],sigma);
+imshow(E);
+sigma=1.0;
+tl=.08;
+E = edge(I,'canny',[tl th],sigma);
+imshow(E);
+tl=.5;
+E = edge(I,'canny',[tl th],sigma);
+tl=.09;
+E = edge(I,'canny',[tl th],sigma);
+imshow(E);
+tl=.01;
+E = edge(I,'canny',[tl th],sigma);
+imshow(E);
+
+%------------ 3.2 ----------
+>> I = rgb2gray(I);
+>> BW = edge(I,'canny');
+>> imshow(BW);
+>> [H T R]= hough(BW);
+>> imshow(H,[],'XData',T,'YData',R,...
+            'InitialMagnification','fit');
+xlabel('\theta'), ylabel('\rho');
+axis on, axis normal, hold on;
+>> P  = houghpeaks(H,1,'threshold',15);
+>> x = T(P(:,2)); y = R(P(:,1));
+plot(x,y,'s','color','red');
+>> lines = houghlines(BW,T,R,P,'FillGap',20,'MinLength',40);
+>> figure, imshow(I), hold on
+max_len = 0;
+for k = 1:length(lines)
+   xy = [lines(k).point1; lines(k).point2];
+   plot(xy(:,1),xy(:,2),'LineWidth',2,'Color','green');
+end
+>> lines = houghlines(BW,T,R,P,'FillGap',40,'MinLength',40);
+>> figure, imshow(I), hold on
+max_len = 0;
+for k = 1:length(lines)
+   xy = [lines(k).point1; lines(k).point2];
+   plot(xy(:,1),xy(:,2),'LineWidth',2,'Color','green');
+end
+>> lines = houghlines(BW,T,R,P,'FillGap',60,'MinLength',40);
+>> figure, imshow(I), hold on
+max_len = 0;
+for k = 1:length(lines)
+   xy = [lines(k).point1; lines(k).point2];
+   plot(xy(:,1),xy(:,2),'LineWidth',2,'Color','green');
+end
+>> 
+
+% ------------ 3.3 ----------
+
+
+I1 = imread('corridorl.jpg');
+I2 = imread('corridorr.jpg');
+imshow(stereaoAnaglyph(I1,I2));
+imshow(stereoAnaglyph(I1,I2));
+disparityRange=[0 15];
+disparityMap = disparity(rgb2gray(I1),rgb2gray(I2));
+imshow(disparityMap);
+disparityMap = disparity(rgb2gray(I1),rgb2gray(I2),'BlockSize',15,'DisparityRange',disparityRange);
+disparityRange=[0 16];
+disparityMap = disparity(rgb2gray(I1),rgb2gray(I2),'BlockSize',15,'DisparityRange',disparityRange);
+imshow(disparityMap);
+imshow(disparityMap, disparityRange);
+title('Disparity Map');
+colormap jet
+colorbar
+disparityRange=[0 16];
+disparityRange=[-16 16];
+disparityMap = disparity(rgb2gray(I1),rgb2gray(I2),'BlockSize',15,'DisparityRange',disparityRange);
+imshow(disparityMap, disparityRange);
+title('Disparity Map');
+colormap jet
+colorbar
+disparityRange=[-6 10];
+disparityMap = disparity(rgb2gray(I1),rgb2gray(I2),'BlockSize',11,'DisparityRange',disparityRange);
+imshow(disparityMap, disparityRange);
+title('Disparity Map');
+colormap jet
+colorbar
+disparityRange=[0 32];
+disparityMap = disparity(rgb2gray(I1),rgb2gray(I2),'BlockSize',11,'DisparityRange',disparityRange);
+imshow(disparityMap, disparityRange);
+title('Disparity Map');
+colormap jet
+colorbar
+disparityRange=[-6 10];
+disparityMap = disparity(rgb2gray(I1),rgb2gray(I2),'BlockSize',15,'DisparityRange',disparityRange);
+imshow(disparityMap, disparityRange);
+title('Disparity Map');
+disparityMap = disparity(rgb2gray(I1),rgb2gray(I2),'BlockSize',10,'DisparityRange',disparityRange);
+disparityMap = disparity(rgb2gray(I1),rgb2gray(I2),'BlockSize',9,'DisparityRange',disparityRange);
+imshow(disparityMap, disparityRange);
+disparityMap = disparity(rgb2gray(I1),rgb2gray(I2),'BlockSize',5,'DisparityRange',disparityRange);
+imshow(disparityMap, disparityRange);
+disparityMap = disparity(rgb2gray(I1),rgb2gray(I2),'BlockSize',7,'DisparityRange',disparityRange);
+imshow(disparityMap, disparityRange);
+mshow(disparityMap, disparityRange);
+title('Disparity Map');
+colormap jet
+colorbar
+imshow(disparityMap, disparityRange);
+title('Disparity Map');
+colormap jet
+colorbar
+disparityRange
+disparityRange = [-16 -16]
+disparityMap = disparity(rgb2gray(I1),rgb2gray(I2),'BlockSize',7,'DisparityRange',disparityRange);
+disparityRange = [-16 16]
+disparityMap = disparity(rgb2gray(I1),rgb2gray(I2),'BlockSize',7,'DisparityRange',disparityRange);
+imshow(disparityMap, disparityRange);
+title('Disparity Map');
+colormap jet
+colorbar
+disparityRange = [0 16]
+disparityMap = disparity(rgb2gray(I1),rgb2gray(I2),'BlockSize',7,'DisparityRange',disparityRange);
+imshow(disparityMap, disparityRange);
+title('Disparity Map');
+colormap jet
+colorbar
+imshow(disparityMap);
